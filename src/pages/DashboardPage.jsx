@@ -9,11 +9,74 @@ import AchievementCard from "../components/dashboard/AchievementCard"
 import BottomNav from "../components/dashboard/BottomNav"
 
 export default function DashboardPage() {
-  const { name, track, challenge, today, week, achievements } = studentData
+  const {
+    name,
+    track,
+    challenge,
+    today,
+    week,
+    achievements,
+  } = studentData
+
+  // Check whether Day 12 has been completed
+  const day12Completed =
+    localStorage.getItem("day12_completed") === "true"
+
+  // Synchronize dashboard values
+  const completedDays = day12Completed
+    ? Math.max(challenge.completedDays, 12)
+    : challenge.completedDays
+
+  const currentDay = day12Completed
+    ? Math.max(challenge.currentDay, 13)
+    : challenge.currentDay
+
+  const currentStreak = day12Completed
+    ? Math.max(challenge.currentStreak, 12)
+    : challenge.currentStreak
+
+  // ---------------------------------------
+  // Achievement synchronization
+  // ---------------------------------------
+
+  const synchronizedAchievements = achievements.map(
+    (achievement) => {
+      let unlocked = false
+
+      if (achievement.id === 1) {
+        // First Week
+        unlocked = completedDays >= 7
+      }
+
+      if (achievement.id === 2) {
+        // 10 Day Streak
+        unlocked = currentStreak >= 10
+      }
+
+      if (achievement.id === 3) {
+        // Consistent Builder
+        unlocked = completedDays >= 15
+      }
+
+      return {
+        ...achievement,
+        unlocked,
+      }
+    }
+  )
+
+  // ---------------------------------------
+  // Today's task synchronization
+  // ---------------------------------------
+
+  const synchronizedToday = {
+    ...today,
+    completed: day12Completed,
+  }
 
   return (
-    <main className="min-h-screen bg-[#08080c] px-5 pb-28 pt-6 text-white">
-      <div className="mx-auto max-w-[430px]">
+    <main className="min-h-screen bg-[#08080c] px-5 py-6 text-white">
+      <div className="mx-auto max-w-[430px] pb-24">
 
         {/* Header */}
         <header className="flex items-center justify-between">
@@ -64,7 +127,7 @@ export default function DashboardPage() {
         {/* Streak */}
         <section className="mt-7">
           <StreakCard
-            currentStreak={challenge.currentStreak}
+            currentStreak={currentStreak}
             bestStreak={challenge.bestStreak}
             week={week}
           />
@@ -72,15 +135,15 @@ export default function DashboardPage() {
 
         {/* Today's task */}
         <section className="mt-5">
-          <TodayTask task={today} />
+          <TodayTask task={synchronizedToday} />
         </section>
 
         {/* Progress */}
         <section className="mt-5">
           <ProgressCard
-            currentDay={challenge.currentDay}
+            currentDay={currentDay}
             totalDays={challenge.totalDays}
-            completedDays={challenge.completedDays}
+            completedDays={completedDays}
           />
         </section>
 
@@ -97,19 +160,23 @@ export default function DashboardPage() {
               </h2>
             </div>
 
-            <button className="flex items-center gap-1 text-xs font-medium text-violet-400">
+            <button
+              className="flex items-center gap-1 text-xs font-medium text-violet-400"
+            >
               View all
               <ChevronRight size={14} />
             </button>
           </div>
 
           <div className="space-y-3">
-            {achievements.map((achievement) => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-              />
-            ))}
+            {synchronizedAchievements.map(
+              (achievement) => (
+                <AchievementCard
+                  key={achievement.id}
+                  achievement={achievement}
+                />
+              )
+            )}
           </div>
         </section>
 
@@ -126,12 +193,15 @@ export default function DashboardPage() {
           </p>
 
           <h2 className="mt-3 text-xl font-bold">
-            You're 11 days stronger than when you started.
+            {day12Completed
+              ? "You're 12 days stronger than when you started."
+              : `You're ${currentStreak} days stronger than when you started.`}
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-zinc-500">
-            Don't break the chain today. Finish your build and keep your
-            progress visible.
+            {day12Completed
+              ? "You completed Day 12. Keep the momentum going and start your next build."
+              : "Don't break the chain today. Finish your build and keep your progress visible."}
           </p>
         </motion.section>
 

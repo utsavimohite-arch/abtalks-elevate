@@ -1,7 +1,28 @@
-import { Flame, Trophy } from "lucide-react"
+import { Trophy } from "lucide-react"
 import { motion } from "framer-motion"
 
-export default function StreakCard({ currentStreak, bestStreak, week }) {
+export default function StreakCard({
+  currentStreak,
+  bestStreak,
+  week,
+}) {
+  // Check whether Day 12 has been completed
+  const day12Completed =
+    localStorage.getItem("day12_completed") === "true"
+
+  // Create a copy so we don't modify the original data
+  const updatedWeek = week.map((item, index) => {
+    // The last item represents today's progress
+    if (index === week.length - 1 && day12Completed) {
+      return {
+        ...item,
+        completed: true,
+      }
+    }
+
+    return item
+  })
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 15 }}
@@ -9,15 +30,14 @@ export default function StreakCard({ currentStreak, bestStreak, week }) {
       transition={{ duration: 0.45 }}
       className="rounded-3xl border border-white/10 bg-white/[0.04] p-5"
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <Flame size={18} className="text-violet-400" />
 
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400">
-              Current streak
-            </p>
-          </div>
+      {/* Header */}
+      <div className="flex items-start justify-between">
+
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400">
+            Current streak
+          </p>
 
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-4xl font-bold tracking-tight">
@@ -30,6 +50,7 @@ export default function StreakCard({ currentStreak, bestStreak, week }) {
           </div>
         </div>
 
+        {/* Best streak */}
         <div className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5">
           <Trophy size={13} className="text-zinc-400" />
 
@@ -37,18 +58,24 @@ export default function StreakCard({ currentStreak, bestStreak, week }) {
             Best {bestStreak}
           </span>
         </div>
+
       </div>
 
+      {/* Weekly progress */}
       <div className="mt-6 flex justify-between">
-        {week.map((item, index) => (
+
+        {updatedWeek.map((item, index) => (
           <div
             key={`${item.day}-${index}`}
             className="flex flex-col items-center gap-2"
           >
+
+            {/* Day */}
             <span className="text-[10px] font-medium text-zinc-600">
               {item.day}
             </span>
 
+            {/* Completion circle */}
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
                 item.completed
@@ -58,9 +85,25 @@ export default function StreakCard({ currentStreak, bestStreak, week }) {
             >
               {item.completed ? "✓" : "·"}
             </div>
+
           </div>
         ))}
+
       </div>
+
+      {/* Completion message */}
+      {day12Completed && (
+        <div className="mt-5 rounded-2xl border border-lime-400/10 bg-lime-400/[0.05] px-4 py-3">
+          <p className="text-xs font-medium text-lime-400">
+            ✓ Today's challenge completed
+          </p>
+
+          <p className="mt-1 text-[11px] text-zinc-500">
+            Keep the streak going tomorrow.
+          </p>
+        </div>
+      )}
+
     </motion.section>
   )
 }

@@ -59,3 +59,40 @@ export const studentData = {
     linkedin: false,
   },
 }
+
+
+// Data specifically for Challenge Day 12
+
+export const dayData = {
+  day: 12,
+
+  title: "Build a responsive developer profile",
+
+  tagline: "Turn your skills into something people can actually see.",
+
+  description:
+    "Create a mobile-first developer profile that showcases who you are, what you can build, and where people can find your work.",
+
+  estimatedTime: "45 min",
+
+  category: "Frontend",
+
+  objective:
+    "Build a polished responsive developer profile page using HTML, CSS and JavaScript or React. The page should clearly communicate your skills, projects and social presence.",
+
+  requirements: [
+    "Create a clean mobile-first developer profile layout.",
+    "Add your name, short introduction and technical skills.",
+    "Showcase at least two projects with short descriptions.",
+    "Add GitHub and LinkedIn profile links.",
+    "Make the page responsive for mobile and desktop screens.",
+  ],
+
+  successCriteria: [
+    "The page works correctly on a 390px mobile viewport.",
+    "The layout is responsive on larger screens.",
+    "Projects and skills are clearly visible.",
+    "GitHub and LinkedIn links are included.",
+    "The final project is committed to GitHub.",
+  ],
+}

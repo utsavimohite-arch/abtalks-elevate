@@ -1,7 +1,14 @@
-import { motion } from 'framer-motion'
-import { ArrowRight, Flame } from 'lucide-react'
+import { motion } from "framer-motion"
+import { ArrowRight, Flame } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export default function LandingPage() {
+  const navigate = useNavigate()
+
+  const goToDashboard = () => {
+    navigate("/dashboard")
+  }
+
   return (
     <main className="min-h-screen bg-[#08080c] px-5 py-6 text-white">
       <div className="mx-auto max-w-[430px]">
@@ -47,8 +54,10 @@ export default function LandingPage() {
             into public proof of what you can do.
           </p>
 
+          {/* Main CTA */}
           <motion.button
             whileTap={{ scale: 0.97 }}
+            onClick={goToDashboard}
             className="mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-500 px-6 py-4 text-sm font-bold shadow-lg shadow-violet-500/20 transition hover:bg-violet-400"
           >
             Start your 60-day journey
@@ -94,7 +103,7 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
-                </motion.section>
+        </motion.section>
 
         {/* How it works */}
         <motion.section
@@ -268,7 +277,11 @@ export default function LandingPage() {
             alive.
           </p>
 
-          <button className="mt-6 flex w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-sm font-bold text-black transition hover:bg-zinc-200 active:scale-[0.98]">
+          {/* Final CTA */}
+          <button
+            onClick={goToDashboard}
+            className="mt-6 flex w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-sm font-bold text-black transition hover:bg-zinc-200 active:scale-[0.98]"
+          >
             Start your journey →
           </button>
         </motion.section>
