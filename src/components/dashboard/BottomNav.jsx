@@ -13,33 +13,39 @@ export default function BottomNav() {
     {
       label: "Achievements",
       icon: Trophy,
-      path: "/dashboard",
+      path: "/achievements",
     },
     {
       label: "Profile",
       icon: User,
-      path: "/dashboard",
+      path: "/profile",
     },
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#09090b]/95 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-md items-center justify-around px-4 py-3">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#08080c]/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-[430px] items-center justify-around px-4">
+
         {items.map((item) => {
           const Icon = item.icon
-          const active = location.pathname === item.path
+
+          const active =
+            location.pathname === item.path
 
           return (
             <Link
               key={item.label}
               to={item.path}
-              className={`flex flex-col items-center gap-1.5 px-4 py-1 transition ${
+              className={`flex min-w-[80px] flex-col items-center gap-1.5 py-1 transition ${
                 active
                   ? "text-violet-400"
                   : "text-zinc-600 hover:text-zinc-400"
               }`}
             >
-              <Icon size={19} />
+              <Icon
+                size={19}
+                strokeWidth={active ? 2.5 : 2}
+              />
 
               <span className="text-[10px] font-medium">
                 {item.label}
@@ -47,6 +53,7 @@ export default function BottomNav() {
             </Link>
           )
         })}
+
       </div>
     </nav>
   )
