@@ -1,9 +1,19 @@
-export default function App() {
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import LandingPage from './pages/LandingPage'
+import DashboardPage from './pages/DashboardPage'
+import ChallengeDayPage from './pages/ChallengeDayPage'
+
+function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-violet-600">
-      <h1 className="text-5xl font-bold text-white">
-        Tailwind is Working 🚀
-      </h1>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/day/12" element={<ChallengeDayPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
+
+export default App
