@@ -1,11 +1,44 @@
-import { ArrowLeft, Code2, ExternalLink, User } from "lucide-react"
+import {
+  ArrowLeft,
+  Code2,
+  ExternalLink,
+  User,
+} from "lucide-react"
+
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+
 import { studentData } from "../data/challengeData"
 
 export default function ProfilePage() {
   const navigate = useNavigate()
 
   const { name, track } = studentData
+
+  const [github, setGithub] = useState("")
+  const [linkedin, setLinkedin] = useState("")
+
+  useEffect(() => {
+    const savedGithub = localStorage.getItem("day12_github") || ""
+    const savedLinkedin = localStorage.getItem("day12_linkedin") || ""
+
+    setGithub(savedGithub)
+    setLinkedin(savedLinkedin)
+  }, [])
+
+  const openExternalLink = (url) => {
+    if (!url) {
+      return
+    }
+
+    let finalUrl = url.trim()
+
+    if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
+      finalUrl = `https://${finalUrl}`
+    }
+
+    window.open(finalUrl, "_blank", "noopener,noreferrer")
+  }
 
   return (
     <main className="min-h-screen bg-[#08080c] px-5 py-6 text-white">
@@ -36,7 +69,6 @@ export default function ProfilePage() {
 
         {/* Profile Hero */}
         <section className="mt-10 text-center">
-
           <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-violet-400/20 bg-violet-500/10">
             <User size={38} className="text-violet-400" />
           </div>
@@ -53,12 +85,10 @@ export default function ProfilePage() {
             Developer building consistently, learning every day, and
             turning progress into visible proof.
           </p>
-
         </section>
 
         {/* About */}
         <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
             About me
           </p>
@@ -72,12 +102,10 @@ export default function ProfilePage() {
             challenge to build consistently and create a public record
             of my learning journey.
           </p>
-
         </section>
 
         {/* Skills */}
         <section className="mt-6">
-
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
             Technical skills
           </p>
@@ -87,7 +115,6 @@ export default function ProfilePage() {
           </h2>
 
           <div className="mt-4 flex flex-wrap gap-2">
-
             {[
               "HTML",
               "CSS",
@@ -104,14 +131,11 @@ export default function ProfilePage() {
                 {skill}
               </span>
             ))}
-
           </div>
-
         </section>
 
         {/* Projects */}
         <section className="mt-8">
-
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-400">
             Projects
           </p>
@@ -124,15 +148,12 @@ export default function ProfilePage() {
 
             {/* Project 1 */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-
               <div className="flex items-start gap-4">
-
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-500/15">
                   <Code2 size={21} className="text-violet-400" />
                 </div>
 
                 <div className="flex-1">
-
                   <h3 className="font-semibold">
                     AI Chatbot
                   </h3>
@@ -141,32 +162,36 @@ export default function ProfilePage() {
                     An AI-powered chatbot built to interact with users
                     and provide intelligent responses.
                   </p>
-
                 </div>
-
               </div>
 
               <button
-                className="mt-4 flex items-center gap-2 text-xs font-semibold text-violet-400"
                 type="button"
+                onClick={() => {
+                  if (github) {
+                    openExternalLink(github)
+                  }
+                }}
+                disabled={!github}
+                className={`mt-4 flex items-center gap-2 text-xs font-semibold ${
+                  github
+                    ? "text-violet-400 hover:text-violet-300"
+                    : "cursor-not-allowed text-zinc-700"
+                }`}
               >
                 View project
                 <ExternalLink size={13} />
               </button>
-
             </div>
 
             {/* Project 2 */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-
               <div className="flex items-start gap-4">
-
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-500/15">
                   <Code2 size={21} className="text-violet-400" />
                 </div>
 
                 <div className="flex-1">
-
                   <h3 className="font-semibold">
                     ABTalks Elevate
                   </h3>
@@ -175,28 +200,33 @@ export default function ProfilePage() {
                     A 60-day coding challenge experience focused on
                     consistency, daily building, and public proof of work.
                   </p>
-
                 </div>
-
               </div>
 
               <button
-                className="mt-4 flex items-center gap-2 text-xs font-semibold text-violet-400"
                 type="button"
+                onClick={() => {
+                  if (github) {
+                    openExternalLink(github)
+                  }
+                }}
+                disabled={!github}
+                className={`mt-4 flex items-center gap-2 text-xs font-semibold ${
+                  github
+                    ? "text-violet-400 hover:text-violet-300"
+                    : "cursor-not-allowed text-zinc-700"
+                }`}
               >
                 View project
                 <ExternalLink size={13} />
               </button>
-
             </div>
 
           </div>
-
         </section>
 
         {/* Social Links */}
         <section className="mt-8">
-
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
             Find me online
           </p>
@@ -205,58 +235,71 @@ export default function ProfilePage() {
 
             {/* GitHub */}
             <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
                 <span className="text-sm font-bold">
                   GH
                 </span>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <p className="font-semibold">
                   GitHub
                 </p>
 
-                <p className="mt-1 text-xs text-zinc-500">
-                  View my code and projects
+                <p className="mt-1 truncate text-xs text-zinc-500">
+                  {github || "No GitHub URL added"}
                 </p>
               </div>
 
-              <ExternalLink
-                size={16}
-                className="text-zinc-600"
-              />
-
+              <button
+                type="button"
+                disabled={!github}
+                onClick={() => openExternalLink(github)}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                  github
+                    ? "bg-violet-500/10 text-violet-400 transition hover:bg-violet-500/20"
+                    : "cursor-not-allowed text-zinc-700"
+                }`}
+                aria-label="Open GitHub"
+              >
+                <ExternalLink size={16} />
+              </button>
             </div>
 
             {/* LinkedIn */}
             <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
                 <span className="text-sm font-bold">
                   in
                 </span>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <p className="font-semibold">
                   LinkedIn
                 </p>
 
-                <p className="mt-1 text-xs text-zinc-500">
-                  Follow my learning journey
+                <p className="mt-1 truncate text-xs text-zinc-500">
+                  {linkedin || "No LinkedIn URL added"}
                 </p>
               </div>
 
-              <ExternalLink
-                size={16}
-                className="text-zinc-600"
-              />
-
+              <button
+                type="button"
+                disabled={!linkedin}
+                onClick={() => openExternalLink(linkedin)}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                  linkedin
+                    ? "bg-violet-500/10 text-violet-400 transition hover:bg-violet-500/20"
+                    : "cursor-not-allowed text-zinc-700"
+                }`}
+                aria-label="Open LinkedIn"
+              >
+                <ExternalLink size={16} />
+              </button>
             </div>
 
           </div>
-
         </section>
 
         {/* Back Button */}

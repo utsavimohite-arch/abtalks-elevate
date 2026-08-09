@@ -5,11 +5,20 @@ import {
   Code2,
 } from "lucide-react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+
+import {
+  completeDay,
+  getDayProofs,
+  isDayCompleted,
+  saveProof,
+} from "../utils/challengeProgress"
 
 export default function ChallengeDayPage() {
   const navigate = useNavigate()
+
+  const DAY = 12
 
   const [github, setGithub] = useState("")
   const [linkedin, setLinkedin] = useState("")
@@ -17,6 +26,24 @@ export default function ChallengeDayPage() {
   const [githubSaved, setGithubSaved] = useState(false)
   const [linkedinSaved, setLinkedinSaved] = useState(false)
   const [completed, setCompleted] = useState(false)
+
+  useEffect(() => {
+    const proofs = getDayProofs(DAY)
+
+    if (proofs.github) {
+      setGithub(proofs.github)
+      setGithubSaved(true)
+    }
+
+    if (proofs.linkedin) {
+      setLinkedin(proofs.linkedin)
+      setLinkedinSaved(true)
+    }
+
+    if (isDayCompleted(DAY)) {
+      setCompleted(true)
+    }
+  }, [])
 
   const requirements = [
     "Create a clean mobile-first developer profile layout.",
@@ -40,7 +67,7 @@ export default function ChallengeDayPage() {
       return
     }
 
-    localStorage.setItem("day12_github", github)
+    saveProof(DAY, "github", github.trim())
     setGithubSaved(true)
   }
 
@@ -50,11 +77,11 @@ export default function ChallengeDayPage() {
       return
     }
 
-    localStorage.setItem("day12_linkedin", linkedin)
+    saveProof(DAY, "linkedin", linkedin.trim())
     setLinkedinSaved(true)
   }
 
-  const completeDay = () => {
+  const handleCompleteDay = () => {
     if (!github.trim() || !linkedin.trim()) {
       alert(
         "Please add both your GitHub proof and LinkedIn proof before completing Day 12."
@@ -62,9 +89,10 @@ export default function ChallengeDayPage() {
       return
     }
 
-    localStorage.setItem("day12_completed", "true")
-    localStorage.setItem("day12_github", github)
-    localStorage.setItem("day12_linkedin", linkedin)
+    saveProof(DAY, "github", github.trim())
+    saveProof(DAY, "linkedin", linkedin.trim())
+
+    completeDay(DAY)
 
     setCompleted(true)
   }
@@ -85,13 +113,15 @@ export default function ChallengeDayPage() {
           </button>
 
           <div className="text-center">
+
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
               ABTALKS ELEVATE
             </p>
 
             <p className="mt-1 text-xs font-semibold text-violet-400">
-              Day 12
+              Day {DAY}
             </p>
+
           </div>
 
           <div className="w-10" />
@@ -104,7 +134,7 @@ export default function ChallengeDayPage() {
           <div className="flex flex-wrap gap-2">
 
             <span className="rounded-full bg-violet-500/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-violet-300">
-              Day 12
+              Day {DAY}
             </span>
 
             <span className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400">
@@ -163,6 +193,7 @@ export default function ChallengeDayPage() {
           <div className="mt-4 space-y-3">
 
             {requirements.map((requirement) => (
+
               <div
                 key={requirement}
                 className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4"
@@ -180,6 +211,7 @@ export default function ChallengeDayPage() {
                 </p>
 
               </div>
+
             ))}
 
           </div>
@@ -196,6 +228,7 @@ export default function ChallengeDayPage() {
           <div className="mt-4 space-y-2">
 
             {successCriteria.map((criteria) => (
+
               <div
                 key={criteria}
                 className="flex items-center gap-3 py-1"
@@ -211,6 +244,7 @@ export default function ChallengeDayPage() {
                 </p>
 
               </div>
+
             ))}
 
           </div>
@@ -284,9 +318,11 @@ export default function ChallengeDayPage() {
             <div className="flex items-start gap-4">
 
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
+
                 <span className="text-sm font-bold">
                   in
                 </span>
+
               </div>
 
               <div>
@@ -331,10 +367,10 @@ export default function ChallengeDayPage() {
         {!completed ? (
 
           <button
-            onClick={completeDay}
+            onClick={handleCompleteDay}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-500 px-5 py-4 text-sm font-bold shadow-lg shadow-violet-500/20 transition hover:bg-violet-400 active:scale-[0.98]"
           >
-            Complete Day 12
+            Complete Day {DAY}
             <Check size={17} />
           </button>
 
@@ -343,14 +379,16 @@ export default function ChallengeDayPage() {
           <div className="mt-6 rounded-2xl border border-lime-400/20 bg-lime-400/10 px-5 py-5 text-center">
 
             <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-lime-400/15">
+
               <Check
                 size={20}
                 className="text-lime-400"
               />
+
             </div>
 
             <h3 className="mt-3 text-lg font-bold">
-              Day 12 completed! 🎉
+              Day {DAY} completed! 🎉
             </h3>
 
             <p className="mt-2 text-sm text-zinc-500">
